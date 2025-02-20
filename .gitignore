@@ -1,4 +1,6 @@
 *.o
+*.dem
+*.json
 *.log
 *.out
 *.exe

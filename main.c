@@ -61,15 +61,31 @@ int main(int argc, char *argv[])
 	while ((fileList = readdir(d)) != NULL)
 	{
 		char newFileName[256];
-		char mapName[256];
+		char mapName[128];
 		char *fullFileName = fileList->d_name;
-		strcpy(newFileName, fullFileName);
+		int i;
 		
-		if (indexOf(fullFileName, ".dem") != -1)
+		if ((i = indexOf(fullFileName, ".dem")) != -1)
 		{
+			// Clear mapName and newFileName
 			memset(mapName, 0, sizeof(mapName));
+			//memset(newFileName, 0, sizeof(newFileName));
+			
+			// Parse demo file for map name
 			getMapName(mapName, fullFileName);
+			
+			// Add map name before file extension
+			fullFileName[i] = '\0';
+			sprintf(newFileName, "%s_%s.dem", fullFileName, mapName);
+			
+			// Rename file
+			//if (rename(fullFileName, newFileName) != 0)
+			//{
+			//	perror("Failed to rename file.");
+			//}	
+			
 			printf("Found file: %s with map name %s\n", fullFileName, mapName);
+			printf("New file name: %s\n", newFileName);
 		}
 	}
 	closedir(d);
