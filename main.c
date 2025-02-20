@@ -34,7 +34,8 @@ void getMapName(char *mapName, char *fileName)
 		{
 			int start = indexOfBin(buff, sizeof(buff), "maps\\", 5) + 5;
 			int end = indexOfBin(buff, sizeof(buff), ".bsp", 4);
-			strncpy(mapName, buff + start, end - start);
+			snprintf(mapName, end - start + 1, "%s", buff + start);
+			//strncpy(mapName, buff + start, end - start);
 			fclose(f);
 		}
 	}
@@ -67,10 +68,6 @@ int main(int argc, char *argv[])
 		
 		if ((i = indexOf(fullFileName, ".dem")) != -1)
 		{
-			// Clear mapName and newFileName
-			memset(mapName, 0, sizeof(mapName));
-			//memset(newFileName, 0, sizeof(newFileName));
-			
 			// Parse demo file for map name
 			getMapName(mapName, fullFileName);
 			
