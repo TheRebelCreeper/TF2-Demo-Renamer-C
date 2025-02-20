@@ -35,7 +35,6 @@ void getMapName(char *mapName, char *fileName)
 			int start = indexOfBin(buff, sizeof(buff), "maps\\", 5) + 5;
 			int end = indexOfBin(buff, sizeof(buff), ".bsp", 4);
 			snprintf(mapName, end - start + 1, "%s", buff + start);
-			//strncpy(mapName, buff + start, end - start);
 			fclose(f);
 		}
 	}
