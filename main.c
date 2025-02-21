@@ -2,6 +2,7 @@
 #define PCRE2_CODE_UNIT_WIDTH 8
 #include <stdio.h>
 #include <dirent.h>
+#include <sys/stat.h>
 #include "pcre2.h"
 #include "memmem.h"
 
@@ -25,7 +26,13 @@ int indexOf(const char *str, const char *substr)
 	return result - str;
 }
 
-int isValidDemo(char *fileName)
+int jsonExists(char *fileName)
+{
+	struct stat b;
+	return (stat(fileName, &b) == 0);
+}
+
+int isValidDemoName(char *fileName)
 {
 	const char *pattern = "([a-zA-Z]*)(_?)(\\d{4}-\\d{2}-\\d{2})_(\\d{2}-\\d{2}-\\d{2})(\\.dem)";
 	const unsigned char *src = (unsigned char*)fileName;
@@ -83,12 +90,14 @@ int main(int argc, char *argv[])
 	while ((fileList = readdir(d)) != NULL)
 	{
 		char newFileName[256];
+		char oldJsonName[256];
+		char newJsonName[256];
 		char mapName[128];
 		char *fullFileName = fileList->d_name;
 		int i;
 		char c;
 		
-		if ((i = indexOf(fullFileName, ".dem")) != -1 && isValidDemo(fullFileName) == 6)
+		if ((i = indexOf(fullFileName, ".dem")) != -1 && isValidDemoName(fullFileName) == 6)
 		{
 			// Parse demo file for map name
 			getMapName(mapName, fullFileName);
@@ -96,20 +105,25 @@ int main(int argc, char *argv[])
 			// Add map name before file extension
 			c = fullFileName[i];
 			fullFileName[i] = '\0';
+			sprintf(oldJsonName, "%s.json", fullFileName);
 			sprintf(newFileName, "%s_%s.dem", fullFileName, mapName);
+			sprintf(newJsonName, "%s_%s.json", fullFileName, mapName);
 			fullFileName[i] = c;
 			
 			// Rename file
-			//if (rename(fullFileName, newFileName) != 0)
-			//{
-			//	perror("Failed to rename file");
-			//}	
-			
-			printf("Renaming %s to %s\n", fullFileName, newFileName);
-		}
-		else
-		{
-			printf("Skipping %s\n", fullFileName);
+			if (rename(fullFileName, newFileName) != 0)
+			{
+				perror("Failed to rename file");
+			}
+
+			if (jsonExists(oldJsonName))
+			{
+				// Rename file
+				if (rename(oldJsonName, newJsonName) != 0)
+				{
+					perror("Failed to rename file");
+				}
+			}
 		}
 	}
 	closedir(d);

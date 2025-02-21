@@ -1,6 +1,7 @@
 
 *.dem
 *.json
+pcre2/
 
 # Prerequisites
 *.d
