@@ -1,4 +1,4 @@
-# TF2-Demo-Renamer
+# TF2 Demo Renamer
 ### [Download here!](https://github.com/TheRebelCreeper/TF2-Demo-Renamer-C/releases)
 Parses demo files and adds the map name to the end of the file name  
 To install just drag the .exe file to the same directory as the demo files.  
