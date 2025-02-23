@@ -10,3 +10,8 @@ Ideally used with valve auto recording, supports prefix.
 
 ## How to build
 Requires https://pcre2project.github.io/pcre2/
+
+Windows mingw64:
+```
+cd pcre2/; cmake -G "MinGW Makefiles" -B build; cmake --build build/
+```
